@@ -1,0 +1,77 @@
+
+
+
+
+
+                sh 'docker stop sham'
+                sh 'docker rm sham'
+                sh 'docker run -d --name sham -p 9080:80 nitin933/first:latest'
+
+
+
+
+pipeline {
+    agent any
+
+    stages {
+        stage('git login check') {
+            steps {
+                git credentialsId:'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',url:'https://github.com/nitin933/cicd.git'
+                echo 'git login'
+            }
+        }
+    }
+}
+
+
+
+
+
+pipeline {
+    agent any
+    stages {
+        stage('git login check') {
+            steps {
+                git credentialsId:'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',url:'https://github.com/nitin933/cicd.git'
+                echo 'git login'
+            }
+        }
+        stage('Docker build') {
+            steps {
+                sh 'docker build -t nitin933/first:latest .'
+                echo 'build completed'
+            }
+        }
+        stage('Docker login') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'bfc63c09-d867-4125-8ad0-59e1b668f445', passwordVariable: 'first', usernameVariable: 'nitin933')]) {
+    // some block
+}
+                echo 'docker login completed'
+            }
+        }
+        stage('image push') {
+            steps {
+                sh 'docker push nitin933/'
+                echo 'push completed'
+            }
+        }
+         stage('image Run') {
+            steps {
+                
+                sh 'docker stop sham'
+                sh 'docker rm sham'
+                sh 'docker run -d --name sham -p 9080:80 nitin933/first:latest'
+                echo 'run completed'
+            }
+        }
+    }
+}
+
+
+stage('docker build image ') {
+       steps {
+           sh 'docker build -t project1 .'
+           echo 'Build image completed'
+       }
+}

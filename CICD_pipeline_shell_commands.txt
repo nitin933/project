@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('git login') {
+            steps {
+                git 'https://github.com/nitin933/new.git'
+                echo 'git login success'
+            }
+        }
+        stage('build image') {
+            steps {
+                sh 'docker build -t nitin933/new:latest .'
+                echo 'build completed'
+            }
+        }
+        stage('docker login') {
+            steps {
+                sh 'docker login -u nitin933 -p M@nda@5303'
+                echo 'docker login completed'
+            }
+        }
+        stage('push image') {
+            steps {
+                sh 'docker push nitin933/new:latest'
+                echo 'docker login completed'
+            }
+        }
+    }
+}
